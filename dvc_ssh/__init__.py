@@ -61,16 +61,20 @@ class SSHFileSystem(FileSystem):
             or DEFAULT_PORT
         )
 
-        for option in ("password", "passphrase"):
+        for option in ("user", "password", "passphrase"):
             login_info[option] = config.get(option, None)
 
-            if config.get(f"ask_{option}") and login_info[option] is None:
-                login_info[option] = ask_password(
-                    login_info["host"],
-                    login_info["username"],
-                    login_info["port"],
-                    option,
-                )
+            if config.get(f"
+                          _{option}") and login_info[option] is None:
+                if option == "user":
+                    login_info[option] = input("user: ")
+                else:
+                    login_info[option] = ask_password(
+                        login_info["host"],
+                        login_info["username"],
+                        login_info["port"],
+                        option,
+                    )
 
         raw_keys = []
         if config.get("keyfile"):
